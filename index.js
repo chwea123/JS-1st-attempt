@@ -1,7 +1,7 @@
 //1. take values from the inputs
 // 2. Make calculations
 // 3. Display it on our table on clicking the button (addStudent)
-// 4. if inputs are empty and we click on add student button we show and Alert
+// 4. if inputs are empty and we click on add student button we show an error below the input
 // 5. if inputs of scores are above 100 or below 0 display an error at the bottom of the input
 // 6. Caculate the summary using CCS btn and disply it at the bottom of the table
 // 7. Remove btn in actions to remove individual items
@@ -9,12 +9,15 @@
 // 9. When no data in table and we click on CCS btn display "No Student added"
 
 document.getElementById("addstudent").addEventListener("click", function () {
-    const student = document.getElementById("studentname").value
-    let mathScore = Number(document.getElementById("math").value)
-    let scienceScore = Number(document.getElementById("science").value)
-    let englishScore = Number(document.getElementById("english").value)
     
-    const total = mathScore + scienceScore + englishScore
+    //Retrieving data
+    const student = document.getElementById("studentname").value
+    let mathScore = document.getElementById("math").value
+    let scienceScore = document.getElementById("science").value
+    let englishScore = document.getElementById("english").value
+    
+    //Calculating scores
+    const total = Number (mathScore + scienceScore + englishScore)
     const average = total/3
 
     let grade = "F"
@@ -30,6 +33,7 @@ document.getElementById("addstudent").addEventListener("click", function () {
         grade = "F"
     }
 
+    //Updating the table
     document.getElementById("Studentlist").insertRow().innerHTML = `
     <td>${student}</td>
                     <td>${mathScore}</td>
@@ -39,5 +43,40 @@ document.getElementById("addstudent").addEventListener("click", function () {
                     <td>${average}</td>
                     <td>${grade}</td>
                     <td><button>Delete</button></td>`
+
+    
+    //
+    if (student === "") {
+        document.getElementById("nameMsg").textContent = "Name cannot be empty!"
+        document.getElementById("nameMsg").style.color = "red"
+    } else {
+        document.getElementById("nameMsg").textContent = ""
+        document.getElementById("nameMsg").style.color = "black"
+    }
+
+    if (mathScore === "") {
+        document.getElementById("numberMsg").textContent = "Math score cannot be empty!"
+        document.getElementById("numberMsg").style.color = "red"
+    } else {
+        document.getElementById("numberMsg").textContent = ""
+        document.getElementById("numberMsg").style.color = "black"
+    }
+
+    if (scienceScore === "") {
+        document.getElementById("scienceMsg").textContent = "Science score cannot be empty!"
+        document.getElementById("scienceMsg").style.color = "red"
+    } else {
+        document.getElementById("scienceMsg").textContent = ""
+        document.getElementById("scienceMsg").style.color = "black"
+    }
+    
+    if (englishScore === "") {
+        document.getElementById("englishMsg").textContent = "English score cannot be empty!"
+        document.getElementById("englishMsg").style.color = "red"
+    } else {
+        document.getElementById("englishMsg").textContent = ""
+        document.getElementById("englishMsg").style.color = "black"
+    }
+
 
 })
