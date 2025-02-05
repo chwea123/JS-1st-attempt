@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Grade Management System</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: auto; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        .high-performer { background-color: lightgreen; }
+        .low-performer { background-color: lightsalmon; }
+    </style>
+</head>
+<body>
+    <h1>Student Grade Management</h1>
+    
+    <div>
+        <input type="text" id="studentName" placeholder="Student Name">
+        <input type="number" id="mathScore" placeholder="Math Score (0-100)">
+        <input type="number" id="scienceScore" placeholder="Science Score (0-100)">
+        <input type="number" id="englishScore" placeholder="English Score (0-100)">
+        
+        <button id="addStudent">Add Student</button>
+        <button id="calculateClassStats">Calculate Class Stats</button>
+    </div>
+
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Math</th>
+                <th>Science</th>
+                <th>English</th>
+                <th>Total</th>
+                <th>Average</th>
+                <th>Grade</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="studentList"></tbody>
+    </table>
+
+    <div id="classStats"></div>
+
+    <script>
+        // Student Management Class
+        class StudentManager {
+            constructor() {
+                this.students = [];
+            }
+
+            calculateGrade(average) {
+                if (average >= 90) return 'A';
+                if (average >= 80) return 'B';
+                if (average >= 70) return 'C';
+                if (average >= 60) return 'D';
+                return 'F';
+            }
+
+            addStudent(name, math, science, english) {
+                // Input validation
+                if (!name || math < 0 || math > 100 || 
+                    science < 0 || science > 100 || 
+                    english < 0 || english > 100) {
+                    alert('Invalid input! Check scores (0-100)');
+                    return null;
+                }
+
+                const total = math + science + english;
+                const average = Math.round(total / 3);
+                const grade = this.calculateGrade(average);
+
+                const student = {
+                    name, 
+                    scores: { math, science, english },
+                    total,
+                    average,
+                    grade
+                };
+
+                this.students.push(student);
+                return student;
+            }
+
+            removeStudent(index) {
+                this.students.splice(index, 1);
+            }
+
+            calculateClassStatistics() {
+                if (this.students.length === 0) return null;
+
+                const stats = {
+                    totalStudents: this.students.length,
+                    averageClassScore: Math.round(
+                        this.students.reduce((sum, student) => sum + student.average, 0) / this.students.length
+                    ),
+                    topPerformers: this.students
+                        .filter(student => student.grade === 'A')
+                        .map(student => student.name),
+                    lowPerformers: this.students
+                        .filter(student => student.grade === 'F')
+                        .map(student => student.name)
+                };
+
+                return stats;
+            }
+        }
+
+        // Initialize Student Manager
+        const studentManager = new StudentManager();
+
+        // DOM Manipulation Functions
+        function renderStudentList() {
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = ''; // Clear existing rows
+
+            studentManager.students.forEach((student, index) => {
+                const row = studentList.insertRow();
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.scores.math}</td>
+                    <td>${student.scores.science}</td>
+                    <td>${student.scores.english}</td>
+                    <td>${student.total}</td>
+                    <td>${student.average}</td>
+                    <td>${student.grade}</td>
+                    <td>
+                        <button onclick="removeStudentRow(${index})">Remove</button>
+                    </td>
+                `;
+                
+                // Conditional styling
+                if (student.grade === 'A') row.classList.add('high-performer');
+                if (student.grade === 'F') row.classList.add('low-performer');
+            });
+        }
+
+        function removeStudentRow(index) {
+            studentManager.removeStudent(index);
+            renderStudentList();
+        }
+
+        // Event Listeners
+        document.getElementById('addStudent').addEventListener('click', () => {
+            const name = document.getElementById('studentName').value;
+            const math = parseInt(document.getElementById('mathScore').value);
+            const science = parseInt(document.getElementById('scienceScore').value);
+            const english = parseInt(document.getElementById('englishScore').value);
+
+            const newStudent = studentManager.addStudent(name, math, science, english);
+            if (newStudent) {
+                renderStudentList();
+                // Clear inputs
+                ['studentName', 'mathScore', 'scienceScore', 'englishScore'].forEach(id => 
+                    document.getElementById(id).value = ''
+                );
+            }
+        });
+
+        document.getElementById('calculateClassStats').addEventListener('click', () => {
+            const statsDiv = document.getElementById('classStats');
+            const stats = studentManager.calculateClassStatistics();
+
+            if (stats) {
+                statsDiv.innerHTML = `
+                    <h3>Class Statistics</h3>
+                    <p>Total Students: ${stats.totalStudents}</p>
+                    <p>Average Class Score: ${stats.averageClassScore}</p>
+                    <p>Top Performers: ${stats.topPerformers.join(', ') || 'None'}</p>
+                    <p>Low Performers: ${stats.lowPerformers.join(', ') || 'None'}</p>
+                `;
+            } else {
+                statsDiv.innerHTML = 'No students added yet!';
+            }
+        });
+    </script>
+</body>
+</html>
