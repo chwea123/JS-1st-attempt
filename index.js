@@ -7,6 +7,24 @@
 // 7. Remove btn in actions to remove individual items
 // 8. Style the bg based on Grade of student
 // 9. When no data in table and we click on CCS btn display "No Student added"
+\
+
+
+const studentsData = []  //database
+
+//object
+const studentData = {
+    studentName: "",
+    mathScore: 0,
+    scienceScore: 0,
+    englishScore: 0,
+    average: 0,
+    total: 0,
+    grade: 0
+
+
+}
+
 
 document.getElementById("addstudent").addEventListener("click", function () {
     
@@ -17,7 +35,7 @@ document.getElementById("addstudent").addEventListener("click", function () {
     let englishScore = document.getElementById("english").value
     
     //Calculating scores
-    const total = Number (mathScore + scienceScore + englishScore)
+    const total = Number(mathScore) + Number(scienceScore) + Number(englishScore)
     const average = total/3
 
     let grade = "F"
@@ -78,5 +96,32 @@ document.getElementById("addstudent").addEventListener("click", function () {
         document.getElementById("englishMsg").style.color = "black"
     }
 
+
+    if (mathScore > 100 || mathScore < 0) {
+        document.getElementById("numberMsg").textContent ="Score cannot be above 100 or Below 0!"
+        document.getElementById("numberMsg").style.color = "red"
+    } else {
+        document.getElementById("numberMsg").textContent =""
+        document.getElementById("numberMsg").style.color = "black"
+    }    
+        
+    if (scienceScore > 100 || scienceScore < 0) {
+        document.getElementById("scienceMsg").textContent ="Score cannot be above 100 or Below 0!"
+        document.getElementById("scienceMsg").style.color = "red"
+    } else {
+        document.getElementById("scienceMsg").textContent =""
+        document.getElementById("scienceMsg").style.color = "black"
+    }  
+
+    if (englishScore > 100 || englishScore < 0) {
+        document.getElementById("englishMsg").textContent ="Score cannot be above 100 or Below 0!"
+        document.getElementById("englishMsg").style.color = "red"
+    } else {
+        document.getElementById("englishMsg").textContent =""
+        document.getElementById("englishMsg").style.color = "black"
+    }  
+})
+
+document.getElementById("calculateStats").addEventListener("click", function () {
 
 })
