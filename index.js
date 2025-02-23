@@ -7,7 +7,7 @@
 // 7. Remove btn in actions to remove individual items
 // 8. Style the bg based on Grade of student
 // 9. When no data in table and we click on CCS btn display "No Student added"
-\
+
 
 
 const studentsData = []  //database
